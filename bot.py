@@ -6,7 +6,7 @@ import telebot
 from telebot import types
 
 # ضع توكن البوت الخاص بك هنا
-TOKEN = "8922686534:AAEjaQAcrWzu42GTaDIG1m-LdUyVXhQqOLs"
+TOKEN = "8920787493:AAGA0qT7L0NhiZy-x36A7sl316RlkX4Z3PI"
 bot = telebot.TeleBot(TOKEN)
 
 # اليوزر الخاص بك كمطور للبوت
