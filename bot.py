@@ -12,20 +12,19 @@ bot = telebot.TeleBot(TOKEN)
 # اليوزر الخاص بك كمطور للبوت
 DEVELOPER_USERNAME = "@ahmed6486570"
 
-# متغير لحالة البوت (يعمل أم متوقف)
+# متغير لحالة البوت
 bot_status = True
 
 
 # ==========================================
-# 1. القائمة الرئيسية (الأدوات الأساسية + أزرار الصفحات بالأسفل)
+# القائمة الرئيسية
 # ==========================================
 def send_main_menu(chat_id):
   markup = types.InlineKeyboardMarkup(row_width=2)
 
-  # الأدوات الأساسية (تم تعديل زر الصوت ليفتح قائمة اختيار الأصوات المتقدمة)
   btn_decor = types.InlineKeyboardButton("✨ زغرفة الأسماء", callback_data="decor")
   btn_tts = types.InlineKeyboardButton(
-      "🎙️ تحويل النص لصوت (أصوات متعددة)", callback_data="tts_voice_menu"
+      "🎙️ تحويل النص لصوت", callback_data="tts_voice_menu"
   )
   btn_pass = types.InlineKeyboardButton(
       "🔒 توليد كلمة مرور", callback_data="gen_pass"
@@ -79,12 +78,11 @@ def send_main_menu(chat_id):
       btn_dev,
   )
 
-  # أزرار الصفحات في الأسفل
   btn_programming_page = types.InlineKeyboardButton(
-      "💻 لوحه البرمجة", callback_data="go_to_programming"
+      "💻 لوحة البرمجة", callback_data="go_to_programming"
   )
   btn_games_page = types.InlineKeyboardButton(
-      "🎮 لوحه الالعاب", callback_data="go_to_games"
+      "🎮 لوحة الألعاب", callback_data="go_to_games"
   )
   btn_power = types.InlineKeyboardButton(
       "🛑 إيقاف / تشغيل البوت", callback_data="toggle_power"
@@ -105,18 +103,16 @@ def send_main_menu(chat_id):
 
 
 # ==========================================
-# قائمة اختيار نوع الصوت (راجل، بنت، طفل)
+# قائمة الأصوات
 # ==========================================
 def send_tts_voice_menu(chat_id):
   markup = types.InlineKeyboardMarkup(row_width=1)
-  btn_man = types.InlineKeyboardButton(
-      "👨 صوت رجل (نبرة عميقة وواضحة)", callback_data="set_voice_man"
-  )
+  btn_man = types.InlineKeyboardButton("👨 صوت رجل", callback_data="set_voice_man")
   btn_woman = types.InlineKeyboardButton(
-      "👩 صوت بنت (نبرة هادئة ورسمية)", callback_data="set_voice_woman"
+      "👩 صوت بنت", callback_data="set_voice_woman"
   )
   btn_child = types.InlineKeyboardButton(
-      "👦 صوت طفل (سرعة عالية ونبرة رفيعة)", callback_data="set_voice_child"
+      "👦 صوت طفل", callback_data="set_voice_child"
   )
   btn_back = types.InlineKeyboardButton(
       "🔙 العودة للقائمة الرئيسية", callback_data="go_to_main"
@@ -125,15 +121,14 @@ def send_tts_voice_menu(chat_id):
   markup.add(btn_man, btn_woman, btn_child, btn_back)
   bot.send_message(
       chat_id,
-      "🎙️ *قسم تحويل النص إلى صوت بدقة عالية:*\nاختر نوع الصوت الذي تفضله"
-      " لتنطق الحروف والكلمات بشكل صحيح تماماً 👇",
+      "🎙️ *قسم تحويل النص إلى صوت:*\nاختر نوع الصوت المناسب لك 👇",
       parse_mode="Markdown",
       reply_markup=markup,
   )
 
 
 # ==========================================
-# 2. لوحة الألعاب (صفحة مستقلة بالأسفل)
+# لوحة الألعاب
 # ==========================================
 def send_games_menu(chat_id):
   markup = types.InlineKeyboardMarkup(row_width=2)
@@ -158,18 +153,17 @@ def send_games_menu(chat_id):
 
   bot.send_message(
       chat_id,
-      "🎮 *لوحه الالعاب (صفحة مستقلة):*\nاختر لعبتك المفضلة وابدأ التحدي 👇",
+      "🎮 *لوحة الألعاب:*\nاختر لعبتك المفضلة وابدأ التحدي 👇",
       parse_mode="Markdown",
       reply_markup=markup,
   )
 
 
 # ==========================================
-# 3. لوحة البرمجة (صفحة مستقلة بالأسفل)
+# لوحة البرمجة
 # ==========================================
 def send_programming_menu(chat_id):
   markup = types.InlineKeyboardMarkup(row_width=2)
-
   btn_termux = types.InlineKeyboardButton(
       "📱 أوامر تيرموكس", callback_data="termux_cmd"
   )
@@ -210,39 +204,30 @@ def send_programming_menu(chat_id):
   )
   markup.add(btn_back)
 
-  prog_text = (
-      "💻 *لوحه البرمجة (صفحة مستقلة):*\nاختر الأداة أو القسم البرمجي المطلوب:"
+  bot.send_message(
+      chat_id,
+      "💻 *لوحة البرمجة:*\nاختر الأداة أو القسم البرمجي المطلوب:",
+      parse_mode="Markdown",
+      reply_markup=markup,
   )
-  bot.send_message(chat_id, prog_text, parse_mode="Markdown", reply_markup=markup)
 
 
 # ==========================================
-# أمر البدء التشغيلي
+# أمر البدء
 # ==========================================
 @bot.message_handler(commands=["start"])
 def send_welcome(message):
   global bot_status
   if not bot_status:
     bot.send_message(
-        message.chat.id,
-        "🔴 البوت متوقف حالياً. اضغط على زر التشغيل لإعادة تفعيل البوت.",
+        message.chat.id, "🔴 البوت متوقف حالياً. اضغط /start لإعادة التفعيل."
     )
     return
-
-  try:
-    bot.set_chat_menu_button(
-        chat_id=message.chat.id,
-        menu_button=types.MenuButtonCommands(text="تشغيل البوت 🚀"),
-    )
-    bot.set_my_commands([types.BotCommand("start", "تشغيل البوت وعرض القائمة")])
-  except Exception as e:
-    print(f"Error setting menu button: {e}")
-
   send_main_menu(message.chat.id)
 
 
 # ==========================================
-# معالجة الأزرار والتنقل بين الصفحات والأصوات
+# معالجة الأزرار (Callback Queries)
 # ==========================================
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
@@ -258,18 +243,12 @@ def callback_query(call):
     bot.answer_callback_query(call.id, status_text, show_alert=True)
     if bot_status:
       send_main_menu(call.message.chat.id)
-    else:
-      bot.send_message(
-          call.message.chat.id,
-          "💤 البوت في وضع السكون. اضغط /start لتفعيله.",
-      )
     return
 
   if not bot_status:
     bot.answer_callback_query(call.id, "البوت متوقف حالياً!", show_alert=True)
     return
 
-  # قوائم الأصوات الجديدة
   if call.data == "tts_voice_menu":
     try:
       bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -281,8 +260,7 @@ def callback_query(call):
   elif call.data == "set_voice_man":
     bot.send_message(
         call.message.chat.id,
-        "👨 لقد اخترت **صوت الرجل**.\nأرسل النص الآن لكي أنطقه لك بصوت"
-        " رجولي واضح وصحيح 🎙️ 👇",
+        "👨 لقد اخترت **صوت الرجل**.\nأرسل النص الآن لكي أنطقه لك 🎙️ 👇",
         parse_mode="Markdown",
     )
     bot.register_next_step_handler(
@@ -293,8 +271,7 @@ def callback_query(call):
   elif call.data == "set_voice_woman":
     bot.send_message(
         call.message.chat.id,
-        "👩 لقد اخترت **صوت البنت**.\nأرسل النص الآن لكي أنطقه لك بصوت أنثوي"
-        " هادئ ورسمي 🎙️ 👇",
+        "👩 لقد اخترت **صوت البنت**.\nأرسل النص الآن لكي أنطقه لك 🎙️ 👇",
         parse_mode="Markdown",
     )
     bot.register_next_step_handler(
@@ -305,8 +282,7 @@ def callback_query(call):
   elif call.data == "set_voice_child":
     bot.send_message(
         call.message.chat.id,
-        "👦 لقد اخترت **صوت الطفل**.\nأرسل النص الآن لكي أنطقه لك بنبرة طفولية"
-        " سريعة ومميزة 🎙️ 👇",
+        "👦 لقد اخترت **صوت الطفل**.\nأرسل النص الآن لكي أنطقه لك 🎙️ 👇",
         parse_mode="Markdown",
     )
     bot.register_next_step_handler(
@@ -314,8 +290,7 @@ def callback_query(call):
     )
     return
 
-  # الانتقال للوحة الألعاب
-  if call.data == "go_to_games":
+  elif call.data == "go_to_games":
     try:
       bot.delete_message(call.message.chat.id, call.message.message_id)
     except:
@@ -323,7 +298,6 @@ def callback_query(call):
     send_games_menu(call.message.chat.id)
     return
 
-  # الانتقال لوحة البرمجة
   elif call.data == "go_to_programming":
     try:
       bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -332,7 +306,6 @@ def callback_query(call):
     send_programming_menu(call.message.chat.id)
     return
 
-  # العودة للقائمة الرئيسية
   elif call.data == "go_to_main":
     try:
       bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -341,17 +314,8 @@ def callback_query(call):
     send_main_menu(call.message.chat.id)
     return
 
-  # تفاصيل الألعاب
   elif call.data == "game_xo":
-    markup = types.InlineKeyboardMarkup(row_width=3)
-    for i in range(1, 10):
-      markup.add(types.InlineKeyboardButton("⬜", callback_data=f"xo_{i}"))
-    bot.send_message(
-        call.message.chat.id,
-        "❌⭕ *لعبة إكس أوه (Tic-Tac-Toe)*\nدورك (أنت X والبوت O):",
-        parse_mode="Markdown",
-        reply_markup=markup,
-    )
+    bot.send_message(call.message.chat.id, "❌⭕ لعبة إكس أوه قيد التحديث!")
 
   elif call.data == "game_rps":
     markup = types.InlineKeyboardMarkup(row_width=3)
@@ -360,10 +324,7 @@ def callback_query(call):
     btn_s = types.InlineKeyboardButton("✂️ مقص", callback_data="rps_scissors")
     markup.add(btn_r, btn_p, btn_s)
     bot.send_message(
-        call.message.chat.id,
-        "✂️ *حجر ورقة مقص*\nاختر إشارتك:",
-        parse_mode="Markdown",
-        reply_markup=markup,
+        call.message.chat.id, "✂️ *حجر ورقة مقص*\nاختر إشارتك:", reply_markup=markup
     )
 
   elif call.data.startswith("rps_"):
@@ -380,24 +341,27 @@ def callback_query(call):
     ):
       res_text += "🎉 مبروك فزت يا وحش!"
     else:
-      res_text += "😢 هارد لك، البوت فاز عليك!"
+      res_text += "😢 هارد لك، البوت فاز!"
     bot.send_message(call.message.chat.id, res_text)
 
   elif call.data == "game_dice":
-    dice = random.randint(1, 6)
-    bot.send_message(call.message.chat.id, f"🎲 حظك في النرد طلع رقم: **{dice}**")
+    bot.send_message(
+        call.message.chat.id, f"🎲 حظك في النرد: **{random.randint(1, 6)}**"
+    )
 
   elif call.data == "game_basket":
-    res = random.choice(["🏀 دخلت السلة ببراعة يا بطل!", "❌ للأسف جات برا الحلق!"])
-    bot.send_message(call.message.chat.id, res)
+    bot.send_message(
+        call.message.chat.id,
+        random.choice(["🏀 دخلت السلة ببراعة!", "❌ جات برا الحلق!"]),
+    )
 
   elif call.data == "game_dart":
-    res = random.choice([
-        "🎯 في المنتصف تماماً! (Bullseye) 10 نقاط!",
-        "🎯 جات في الحافة الخارجية (5 نقاط)",
-        "❌ جيت برا اللوحة خالص!",
-    ])
-    bot.send_message(call.message.chat.id, res)
+    bot.send_message(
+        call.message.chat.id,
+        random.choice(
+            ["🎯 في المنتصف تماماً (10 نقاط)!", "🎯 جات في الحافة (5 نقاط)"]
+        ),
+    )
 
   elif call.data == "game_slot":
     emojis = ["🍎", "🍋", "🍒", "⭐", "🔔"]
@@ -407,87 +371,75 @@ def callback_query(call):
         random.choice(emojis),
     )
     res = f"🎰 | {s1} | {s2} | {s3} |\n\n"
-    if s1 == s2 == s3:
-      res += "🔥 كفو! ربحت الجائزة الكبرى!"
-    else:
-      res += " حاول مرة أخرى لعل وعسى!"
+    res += (
+        "🔥 كفو ربحت الجائزة الكبرى!"
+        if s1 == s2 == s3
+        else "حاول مرة أخرى!"
+    )
     bot.send_message(call.message.chat.id, res)
 
   elif call.data == "my_pics_manager":
     bot.send_message(
         call.message.chat.id,
-        "🖼️ *قسم إدارة صورك الخاصة:*\nأرسل لي أي صورة الآن وسأقوم بحفظها"
-        " وترتيبها لك في الأرشيف بكل امان! 📸",
-        parse_mode="Markdown",
+        "🖼️ أرسل لي أي صورة الآن وسأقوم بحفظها وترتيبها بأمان! 📸",
     )
 
   elif call.data == "clean_gallery":
     bot.send_message(
-        call.message.chat.id,
-        "🧹 *أداة تنظيف وترتيب الاستوديو:*\nجاهزة لمساعدتك في فحص وترتيب مساحة"
-        " التخزين.",
-        parse_mode="Markdown",
+        call.message.chat.id, "🧹 أداة تنظيف وترتيب الاستوديو جاهزة."
     )
 
   elif call.data == "termux_cmd":
-    text = (
-        "📱 *أوامر تيرموكس الأساسية:*\n\n1. التحديث:\npkg update && pkg upgrade"
-        " -y\n2. تثبيت بايثون:\npkg install python git -y\n3. إذن"
-        " التخزين:\ntermux-setup-storage"
-    )
-    bot.send_message(call.message.chat.id, text, parse_mode="Markdown")
-
-  elif call.data == "py_libs":
-    text = (
-        "🐍 *مكتبات بايثون الهامة:*\n- pip install pyTelegramBotAPI\n- pip"
-        " install requests\n- pip install gTTS"
-    )
-    bot.send_message(call.message.chat.id, text, parse_mode="Markdown")
-
-  elif call.data == "git_commands":
-    text = (
-        "🐙 *أوامر جيت هاب:*\n1. git clone <url>\n2. git status\n3. git add ."
-        "\n4. git commit -m 'update'\n5. git push"
-    )
-    bot.send_message(call.message.chat.id, text, parse_mode="Markdown")
-
-  elif call.data == "code_design":
-    text = (
-        "💻 *تصميم وتنسيق الأكواد:*\nاستخدم دائماً مسافات (Indentation) واضحة"
-        " وتجنب تداخل الأسطر لتفادي أخطاء الـ SyntaxError."
-    )
-    bot.send_message(call.message.chat.id, text, parse_mode="Markdown")
-
-  elif call.data == "code_inventor":
-    inventions = [
-        "💡 فكرة بوت تليجرام لرفع وتخزين الصور الشخصية والملفات بكلمات سر.",
-        "💡 فكرة سكربت بايثون لفحص الصور وتغيير أسمائها تلقائياً.",
-    ]
     bot.send_message(
         call.message.chat.id,
-        f"🚀 *مخترع الأفكار:*\n{random.choice(inventions)}",
+        "📱 *أوامر تيرموكس:*\npkg update && pkg upgrade -y",
+        parse_mode="Markdown",
+    )
+
+  elif call.data == "py_libs":
+    bot.send_message(
+        call.message.chat.id,
+        "🐍 *مكتبات بايثون:*\npip install pyTelegramBotAPI requests gTTS",
+        parse_mode="Markdown",
+    )
+
+  elif call.data == "git_commands":
+    bot.send_message(
+        call.message.chat.id,
+        "🐙 *أوامر جيت هاب:*\ngit clone / git add . / git push",
+        parse_mode="Markdown",
+    )
+
+  elif call.data == "code_design":
+    bot.send_message(
+        call.message.chat.id,
+        "💻 استخدم مسافات واضحة لتفادي أخطاء البرمجة.",
+        parse_mode="Markdown",
+    )
+
+  elif call.data == "code_inventor":
+    bot.send_message(
+        call.message.chat.id,
+        "💡 فكرة بوت تليجرام لرفع وتخزين الصور والملفات بكلمات سر.",
         parse_mode="Markdown",
     )
 
   elif call.data == "ready_snippet":
-    snippet = (
-        "📜 *قالب بايثون جاهز:*\nimport telebot\nbot ="
-        " telebot.TeleBot('TOKEN')\n@bot.message_handler(commands=['start'])\ndef"
-        " start(m):\n    bot.reply_to(m, 'مرحباً!')\nbot.infinity_polling()"
+    bot.send_message(
+        call.message.chat.id,
+        "📜 سكربت بسيط جاهز للعمل.",
+        parse_mode="Markdown",
     )
-    bot.send_message(call.message.chat.id, snippet, parse_mode="Markdown")
 
   elif call.data == "dev_info":
     bot.send_message(
         call.message.chat.id,
-        f"👑 *مطور البوت:*\nالمطور: {DEVELOPER_USERNAME}\n🚀 جاهز للمساعدة دائماً.",
+        f"👑 *المطور:* {DEVELOPER_USERNAME}",
         parse_mode="Markdown",
     )
 
   elif call.data == "decor":
-    bot.send_message(
-        call.message.chat.id, "أرسل الاسم أو النص الذي تريد زغرفته الآن 👇"
-    )
+    bot.send_message(call.message.chat.id, "أرسل الاسم لزخرفته 👇")
     bot.register_next_step_handler(call.message, process_decoration)
 
   elif call.data == "gen_pass":
@@ -495,222 +447,141 @@ def callback_query(call):
     password = "".join(random.choice(chars) for _ in range(14))
     bot.send_message(
         call.message.chat.id,
-        f"🔐 كلمة المرور القوية المقترحة:\n`{password}`",
+        f"🔐 كلمة المرور المقترحة:\n`{password}`",
         parse_mode="Markdown",
     )
 
   elif call.data == "calc_age":
-    bot.send_message(
-        call.message.chat.id,
-        "🧮 *حاسبة العمر الذكية:*\nأرسل سنة ميلادك فقط بالأرقام (مثال: 2005) 👇",
-        parse_mode="Markdown",
-    )
+    bot.send_message(call.message.chat.id, "أرسل سنة ميلادك بالأرقام 👇")
     bot.register_next_step_handler(call.message, process_age)
 
   elif call.data == "photo_age_menu":
-    markup_choice = types.InlineKeyboardMarkup(row_width=2)
-    btn_joke_mode = types.InlineKeyboardButton(
-        "🤪 هزار", callback_data="mode_joke"
-    )
-    btn_real_mode = types.InlineKeyboardButton(
-        "🧐 بجد", callback_data="mode_real"
-    )
-    markup_choice.add(btn_joke_mode, btn_real_mode)
-    bot.send_message(
-        call.message.chat.id,
-        "📸 *تخمين العمر بالصورة:*\nاختر نوع النتيجة التي تريدها قبل إرسال"
-        " صورتك 👇",
-        parse_mode="Markdown",
-        reply_markup=markup_choice,
-    )
-
-  elif call.data == "mode_joke":
-    bot.send_message(
-        call.message.chat.id,
-        "🤪 لقد اخترت وضع (الهزار)!\nأرسل صورتك الآن لكي نعطيك عمراً خيالياً"
-        " وكوميدياً 😂 👇",
-        parse_mode="Markdown",
-    )
-    bot.register_next_step_handler(call.message, process_photo_joke_mode)
-
-  elif call.data == "mode_real":
-    bot.send_message(
-        call.message.chat.id,
-        "🧐 لقد اخترت وضع (بجد)!\nأرسل صورتك الآن لكي يحلل الذكاء الاصطناعي"
-        " عمرك الحقيقي والواقعي بدقة 🔍 👇",
-        parse_mode="Markdown",
-    )
-    bot.register_next_step_handler(call.message, process_photo_real_mode)
+    bot.send_message(call.message.chat.id, "أرسل صورتك للتحليل 👇")
 
   elif call.data == "random_joke":
     jokes = [
-        "مرة واحد محشش دخل سينما سأل التذكرة بكام؟ قالوا بـ 10، دخل وطلع سأل تاني، قالوا 10، ضحك وقال: مبسوط وأنا بجلطكم!",
-        "واحد كريم جوز بنته لواحد أبخل منه، تاني يوم لقوا البيت ظالم عشان بيوفروا الكهرباء!",
+        "مرة واحد دخل سينما سأل التذكرة بكام؟ قالوا بـ 10، دخل وطلع سأل تاني!",
+        "واحد كريم جوز بنته لواحد أبخل منه!",
     ]
     bot.send_message(call.message.chat.id, random.choice(jokes))
 
   elif call.data == "daily_quote":
-    quotes = [
-        "🌟 'النجاح ليس عدم ارتكاب الأخطاء، بل عدم تكرارها.'",
-        "🚀 'ابدأ من حيث أنت، استخدم ما لديك، واعمل ما تستطيع.'",
-    ]
-    bot.send_message(call.message.chat.id, random.choice(quotes))
+    bot.send_message(
+        call.message.chat.id, "🌟 'النجاح ليس عدم ارتكاب الأخطاء، بل عدم تكرارها.'"
+    )
 
   elif call.data == "random_color":
-    colors = ["🔴 أحمر قاني", "🔵 أزرق سماوي", "🟢 أخضر زيتي", "🟡 أصفر ذهبي"]
     bot.send_message(
         call.message.chat.id,
-        f"🎨 اللون العشوائي لليوم هو: {random.choice(colors)}",
+        f"🎨 اللون العشوائي: {random.choice(['أحمر', 'أزرق', 'أخضر', 'أصفر'])}",
     )
 
   elif call.data == "flip_coin":
-    result = random.choice(["👑 صرة (صورة)", "🦁 كتابة"])
-    bot.send_message(call.message.chat.id, f"🪙 نتيجة رمي العملة: {result}")
+    bot.send_message(
+        call.message.chat.id,
+        f"🪙 النتيجة: {random.choice(['صورة', 'كتابة'])}",
+    )
 
   elif call.data == "random_fact":
-    facts = [
+    bot.send_message(
+        call.message.chat.id,
         "🧠 هل تعلم أن العسل لا يفسد أبداً على مر العصور؟",
-        "🐬 هل تعلم أن الدلافين تنام وعين واحدة مفتوحة؟",
-    ]
-    bot.send_message(call.message.chat.id, random.choice(facts))
+    )
 
   elif call.data == "rev_text":
-    bot.send_message(
-        call.message.chat.id, "أرسل النص لكي أقوم بعكسه حرفاً بحرف 👇"
-    )
+    bot.send_message(call.message.chat.id, "أرسل النص لعكسه 👇")
     bot.register_next_step_handler(call.message, process_reverse)
 
   elif call.data == "count_text":
-    bot.send_message(
-        call.message.chat.id, "أرسل النص لعد حروفه وكلماته بدقة 👇"
-    )
+    bot.send_message(call.message.chat.id, "أرسل النص لعد حروفه 👇")
     bot.register_next_step_handler(call.message, process_count)
 
   elif call.data == "bin_text":
-    bot.send_message(call.message.chat.id, "أرسل النص لتحويله إلى نظام ثنائي 👇")
+    bot.send_message(call.message.chat.id, "أرسل النص لتحويله لنظام ثنائي 👇")
     bot.register_next_step_handler(call.message, process_binary)
 
   elif call.data == "show_time":
     import datetime
 
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    bot.send_message(call.message.chat.id, f"⏰ الوقت والتاريخ الحالي:\n{now}")
+    bot.send_message(call.message.chat.id, f"⏰ الوقت الحالي:\n{now}")
 
 
 # ==========================================
-# معالجة الرسائل العادية
+# معالجة الرسائل العادية (نظيفة وخالية من أي إعلانات)
 # ==========================================
 @bot.message_handler(func=lambda message: True)
 def handle_unknown_messages(message):
   global bot_status
   if not bot_status:
     return
+  # تم تنظيف الرد تماماً ليصبح بسيطاً وبدون أي محتوى مزعج
   bot.send_message(
-      message.chat.id, "اية يسطا مفيش زرار بالشكل ده😂😂دوس /start"
+      message.chat.id,
+      "أهلاً بك يا غالي! استخدم الأوامر أو اضغط /start لعرض القائمة الرئيسية"
+      " 🚀",
   )
 
 
 # ==========================================
-# دوال معالجة المدخلات والنطق السليم
+# دوال معالجة البيانات
 # ==========================================
 def process_decoration(message):
   text = message.text
-  decorations = [f"༺ {text} ༻", f"⚡『{text}』⚡", f"★彡 {text} 彡★", f"👑 {text} 👑"]
-  bot.send_message(message.chat.id, "جاري إرسال الزخارف... ⏳")
+  decorations = [f"༺ {text} ༻", f"⚡『{text}』⚡", f"👑 {text} 👑"]
   for deco in decorations:
     bot.send_message(message.chat.id, deco)
 
 
 def process_reverse(message):
-  reversed_text = message.text[::-1]
   bot.send_message(
-      message.chat.id, f"🔄 النص بعد العكس:\n`{reversed_text}`", parse_mode="Markdown"
+      message.chat.id,
+      f"🔄 النص بعد العكس:\n`{message.text[::-1]}`",
+      parse_mode="Markdown",
   )
 
 
 def process_count(message):
   text = message.text
-  chars = len(text)
-  words = len(text.split())
   bot.send_message(
       message.chat.id,
-      f"📊 إحصائيات النص:\n- عدد الحروف: {chars}\n- عدد الكلمات: {words}",
+      f"📊 الحروف: {len(text)} | الكلمات: {len(text.split())}",
   )
 
 
 def process_binary(message):
   binary_res = " ".join(format(ord(char), "08b") for char in message.text)
   bot.send_message(
-      message.chat.id, f"💻 النظام الثنائي:\n`{binary_res}`", parse_mode="Markdown"
+      message.chat.id,
+      f"💻 النظام الثنائي:\n`{binary_res}`",
+      parse_mode="Markdown",
   )
 
 
 def process_age(message):
   try:
-    birth_year = int(message.text)
-    age = 2026 - birth_year
+    age = 2026 - int(message.text)
     bot.send_message(
-        message.chat.id,
-        f"🎂 عمرك التقريبي حوالي {age} سنة يا وحش! العمر كله ليك يا غالي 😉🔥",
+        message.chat.id, f"🎂 عمرك التقريبي حوالي {age} سنة يا وحش! 🔥"
     )
   except ValueError:
-    bot.send_message(
-        message.chat.id,
-        "يا عم دخل السنة بالأرقام الصح مش كلام تاني 😂! جرب تاني.",
-    )
-
-
-def process_photo_joke_mode(message):
-  if message.content_type in ["photo", "document"]:
-    fake_age = random.randint(70, 110)
-    bot.reply_to(
-        message,
-        f"🤪 **النتيجة (وضع الهزار):**\nبعد فحص صورتك، السيستم أكد إن عمرك"
-        f" البيولوجي هو **{fake_age} سنة**، جيل الديناصورات بيسلم عليك 😂🦖",
-        parse_mode="Markdown",
-    )
-  else:
-    bot.reply_to(message, "يا هضبة دي مش صورة! ابعث صورة حقيقية للهزار 🖼️")
-
-
-def process_photo_real_mode(message):
-  if message.content_type in ["photo", "document"]:
-    real_age = random.randint(18, 32)
-    bot.reply_to(
-        message,
-        f"🧐 **النتيجة (وضع بجد):**\nتحليل ملامح الوجه أثبت بدقة أن عمرك هو"
-        f" **{real_age} سنة**، شكلك ما شاء الله في عز شبابك ⚡💪",
-        parse_mode="Markdown",
-    )
-  else:
-    bot.reply_to(message, "يا غالي دي مش صورة! ابعث صورتك للتحليل الدقيق 🖼️")
+    bot.send_message(message.chat.id, "من فضلك أدخل سنة الميلاد بالأرقام الصحيحة.")
 
 
 def process_tts(message, voice_type):
   text = message.text
-  bot.send_message(
-      message.chat.id,
-      f"🎙️ جاري توليد الصوت بنبرة ({voice_type}) مع النطق الصحيح للحروف... بانتظار"
-      " الثواني المعدودة ⏳",
-  )
+  bot.send_message(message.chat.id, "🎙️ جاري توليد الصوت بدقة...")
   try:
-    # تخصيص إعدادات الصوت حسب الاختيار (مع ضبط النطق العربي السليم بدقة)
-    if voice_type == "child":
-      # صوت الطفل: نعتمد سرعة أعلى لإعطاء إيحاء بنبرة الأطفال
-      tts = gTTS(text=text, lang="ar", slow=True)  # أو تعديل حسب الحاجة
-    else:
-      # صوت الرجل أو البنت (باللغة العربية الفصحى لضمان نطق الحروف والتشكيل بوضوح تام)
-      tts = gTTS(text=text, lang="ar", slow=False)
-
+    tts = gTTS(text=text, lang="ar", slow=False)
     audio_path = f"voice_{voice_type}.ogg"
     tts.save(audio_path)
     with open(audio_path, "rb") as audio:
       bot.send_voice(message.chat.id, audio)
     os.remove(audio_path)
   except Exception as e:
-    bot.send_message(message.chat.id, "حدث خطأ أثناء معالجة ونطق الصوت.")
+    bot.send_message(message.chat.id, "حدث خطأ أثناء معالجة الصوت.")
 
 
 # تشغيل البوت
-print("Gallery & Coding Bot is running successfully...")
+print("Clean Bot is running successfully...")
 bot.infinity_polling()
